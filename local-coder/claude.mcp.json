@@ -7,7 +7,10 @@
         "-m",
         "local_coder_mcp",
         "serve"
-      ]
+      ],
+      "env": {
+        "LOCAL_CODER_CONFIG": "C:/Users/Mark/AppData/Roaming/LocalCoderMCP/config.toml"
+      }
     }
   }
 }

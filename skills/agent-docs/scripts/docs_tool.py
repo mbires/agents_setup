@@ -175,11 +175,18 @@ def cmd_lint(d):
         rel = p.relative_to(d).as_posix()
         if not meta:
             errs.append(f"{rel}: no frontmatter, run init"); continue
-        for k in ("id", "title", "summary", "status", "updated"):
+        for k in ("id", "title", "summary", "code", "status", "updated"):
             if k not in meta:
                 errs.append(f"{rel}: missing '{k}'")
-        if meta.get("summary") == "TODO":
-            errs.append(f"{rel}: summary is TODO")
+        if not meta.get("summary") or meta["summary"] == "TODO":
+            errs.append(f"{rel}: summary is empty or TODO")
+        if "code" in meta and not re.fullmatch(r"\[.*\]", meta["code"]):
+            errs.append(f"{rel}: code must be a bracketed path list")
+        if "updated" in meta:
+            try:
+                datetime.date.fromisoformat(meta["updated"])
+            except ValueError:
+                errs.append(f"{rel}: updated must be an ISO date")
         if meta.get("status") and meta["status"] not in STATUSES:
             errs.append(f"{rel}: bad status '{meta['status']}'")
         i = meta.get("id")

@@ -1,6 +1,6 @@
 ---
 name: agent-docs
-version: 1.1.0
+version: 1.2.0
 description: Rules for creating, structuring, shortening, and updating project/code documentation that is read mainly by AI agents (md files in docs/). Use whenever you write, edit, split, review, translate, condense, or migrate documentation, README/spec/design notes, API or module docs, or when you hand a programming task to another agent and need to reference docs. Also use when docs lack IDs, are too long or wordy, duplicated, stale, or not in English. Trigger even if the user only says "document this", "update the docs", or "add this to the docs".
 ---
 
@@ -106,7 +106,7 @@ The receiving agent loads only the referenced sections. If a referenced doc is m
 - `init [docs_dir]` adds frontmatter, doc ID, and `{#sN}` section IDs to md files without them. Moves the first `# Title` line into `title:`. Sets `summary: TODO`, `status: draft`, empty `code: []`. Then rebuilds the index.
 - `new <relpath> "<title>" [docs_dir]` creates a stub doc with the next free ID.
 - `index [docs_dir]` rebuilds INDEX.md (and area indexes above 40 docs) from frontmatter.
-- `lint [docs_dir]` checks: missing or duplicate IDs, bad frontmatter, `summary: TODO`, size limits, sections without IDs, `code:` paths that do not exist, broken `ID#sN` references, stale INDEX.md. Exit code 1 if anything is wrong.
+- `lint [docs_dir]` checks: missing or duplicate IDs, bad frontmatter (all fields required, `code: [...]`, ISO `updated`), empty or `TODO` summary, size limits, sections without IDs, `code:` paths that do not exist, broken `ID#sN` references, stale INDEX.md. Exit code 1 if anything is wrong.
 - `show ID[#sN] [docs_dir]` prints only that doc or section.
 - `find <words> [docs_dir]` prints index rows whose ID, path or summary hold all the words. Cheaper than reading an index.
 - `stats [docs_dir]` prints words, lines, and a rough token estimate per doc. Run before and after condensing to see the saving.

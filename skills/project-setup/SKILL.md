@@ -1,6 +1,6 @@
 ---
 name: project-setup
-version: 1.0.0
+version: 1.1.0
 description: Set up a new project, or move an existing one, onto the shared _Claude kit (D:/_Dev/_Claude) - interview the user, pick rule modules and skills, write AGENTS.md, spec rules, settings and Local Coder config. Use when AGENTS.md says "SETUP PENDING", or when the user asks to set up, standardize or migrate a project's agent rules and skills.
 ---
 
@@ -48,11 +48,11 @@ Install: `python KIT/scripts/kit.py add <project> agent-docs spec-writing ... ag
 ## 3. Write the files
 
 - **AGENTS.md** (the only rules file): `# <Project>`, one line on what it is and the stack, then the chosen modules in the order of the table, then `## Project rules` with only what is specific to this project (answers 6-9). Paste modules verbatim; do not reword them, so `kit.py` and later updates stay simple. No rules that repeat a skill. Target under 1200 tokens.
-- **CLAUDE.md** stays `@AGENTS.md`. If Gemini/Antigravity is used and does not read AGENTS.md, add `GEMINI.md` with the same single line (check the tool's current docs first).
+- **CLAUDE.md** stays `@AGENTS.md`. Codex and Antigravity read AGENTS.md and `.agents/skills/` directly; no GEMINI.md needed. Antigravity also loads every file in `.agents/rules/`, so never keep rules there that AGENTS.md already has.
 - **Spec rules** (if `spec-writing`): `.agents/spec-writing.md` from `KIT/skills/spec-writing/templates/project.md`. Keep the standard layout unless the user wants another; fill gates, protected files, project rules by doc ID.
 - **`.claude/settings.json`**: add the user's large or private folders to `permissions.deny` as `Read(./<folder>/**)`. Keep the defaults.
 - **`.gitignore`**: add the same folders if they should not be in git.
-- **Local Coder** (if used): copy `KIT/local-coder/claude.mcp.json` to `.mcp.json` and `KIT/local-coder/agents.mcp_config.json` to `.agents/mcp_config.json`. The project path must be in `[security] allowed_roots` of `%APPDATA%/LocalCoderMCP/config.toml`; show the user the line to add and add it only after they say yes.
+- **Local Coder** (if used): keep an existing `.mcp.json`; otherwise copy `KIT/local-coder/claude.mcp.json` to `.mcp.json` and `KIT/local-coder/agents.mcp_config.json` to `.agents/mcp_config.json`. The project path must be in `[security] allowed_roots` of `%APPDATA%/LocalCoderMCP/config.toml`; show the user the line to add and add it only after they say yes.
 - **Docs**: run `python .agents/skills/agent-docs/scripts/docs_tool.py index`, and `... index specification` if specs are used.
 - **Git**: add the remote only if the user gave one. Commit only when the user asks.
 
@@ -63,6 +63,8 @@ Same steps, plus:
 - Move `.claude|.agents/skills/spec-writing/project.md` to `.agents/spec-writing.md`, then remove the old skill copies and run `kit.py add` for the kit versions.
 - Remove rule files that the new AGENTS.md replaces (for example `.agents/rules/local-coder.md`) only after the user agrees.
 - If a project copy of a skill has changes that are worth keeping, tell the user; they go into the kit, not the project.
+- Project copies of `docs_tool.py` (for example `scripts/docs_tool.py`) can hold fixes: compare them with the kit first and move useful changes into the kit before you delete them. Update paths in README and docs to `.agents/skills/agent-docs/scripts/docs_tool.py`.
+- A doc system that differs from `agent-docs` (other statuses, Obsidian fields, own script) stays as it is: keep its rules under `## Project rules` and do not install `agent-docs`.
 
 ## 5. Finish
 
