@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "local-coder": {
+      "command": "d:/_Dev/Local_Coder_MCP/.venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "local_coder_mcp",
+        "serve"
+      ],
+      "cwd": "d:/_Dev/Local_Coder_MCP"
+    }
+  }
+}

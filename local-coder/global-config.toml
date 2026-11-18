@@ -1,0 +1,82 @@
+# Example Configuration for Local Coder MCP
+# Place this at %APPDATA%/LocalCoderMCP/config.toml (Windows)
+# or ~/.config/LocalCoderMCP/config.toml (Linux/macOS),
+# or specify via --config / LOCAL_CODER_CONFIG.
+
+[model]
+# Local inference endpoint (OpenAI-compatible, LM Studio default)
+base_url = "http://127.0.0.1:1234/v1"
+model = "Qwen2.5-Coder-7B-Instruct"
+temperature = 0.1
+timeout_seconds = 180
+# Completion upper bound, dynamically capped to remaining loaded context capacity.
+max_output_tokens = 8192
+# Optional fallback when loaded-instance metadata is unavailable. Verify locally.
+# Omitted by default (unknown); missing runtime AND config capacity fails closed.
+# context_window_tokens = 4096
+# Positive integer minimum for structured JSON in all four modes.
+minimum_completion_tokens = 512
+# Non-negative integer safety reserve, plus the estimator uncertainty allowance.
+context_safety_margin_tokens = 256
+repair_attempts = 1
+
+[delegation]
+# Task types accepted by delegate_code_task. TRIAGE and REVIEW are disabled by
+# default (unreliable with small local models). Allowed: IMPLEMENT, TEST, TRIAGE, REVIEW.
+enabled_task_types = ["IMPLEMENT", "TEST"]
+
+[telemetry]
+# Append one privacy-safe row per delegation to a local SQLite database.
+# No task text, prompts, source contents or full paths are stored.
+# View a summary with: local-coder-mcp telemetry-stats
+sqlite_enabled = true
+# Default: platform user data dir, e.g. %LOCALAPPDATA%/LocalCoderMCP/telemetry.sqlite3
+# sqlite_path = "D:/_Dev/local_coder_telemetry.sqlite3"
+
+[response]
+# false = compact token-lean result (status, summary, diff, verification verdict).
+# true = full envelope with telemetry and diagnostics. Per-call `verbose` overrides.
+verbose = false
+
+[security]
+# Roots permitted for delegation (loaded in Phase A, enforced in Phase B+)
+allowed_roots = ["D:/_Dev/Tender_Radar", "D:/_Dev/Reality_Radar", "D:/_Dev/Local_Coder_MCP"]
+max_writable_files = 3
+max_context_files = 6
+max_single_file_bytes = 500000
+max_total_context_bytes = 2000000
+allow_symlink_escape = false
+
+[limits]
+# Patch size and change limits
+max_changed_lines = 400
+max_patch_bytes = 200000
+
+[verification]
+# Safe runner execution in isolated workspace
+enabled = true
+timeout_seconds = 120
+allowed_runners = ["pytest", "ruff_check", "mypy", "none"]
+max_stdout_bytes = 12000
+max_stderr_bytes = 12000
+allow_workspace_root_target = false
+max_targets = 5
+
+[python_environment]
+# Target project virtual environment discovery and execution policy
+# Modes: "project_preferred" (default), "project_required", "local_coder"
+mode = "project_preferred"
+discovery_names = [".venv", "venv"]
+allow_local_coder_fallback = true
+validate_interpreter = true
+interpreter_timeout_seconds = 10
+strip_pythonpath = true
+dont_write_bytecode = true
+
+[workspace]
+preserve_failed_workspaces = false
+support_files = []
+max_workspace_bytes = 10000000
+
+[logging]
+level = "INFO"
